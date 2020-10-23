@@ -1,0 +1,1 @@
+This is a simple pinger class based on boost.asio
