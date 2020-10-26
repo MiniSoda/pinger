@@ -1,4 +1,5 @@
 #include "pinger_v4.hpp"
+#include "pinger_v6.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -15,6 +16,7 @@ int main(int argc, char* argv[])
 
     boost::asio::io_context io_context;
     pinger_v4 p(io_context, argv[1]);
+    //pinger_v6 p(io_context, argv[1]);
     p.ping();
     io_context.run();
   }

@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "pinger.hpp"
-#include "ipv6_header.hpp"
+#include "icmp_header.hpp"
 
 class pinger_v6 : public pinger_base
 {

@@ -1,7 +1,10 @@
 #include <iostream>
+#include <iomanip>
 
+#include "ipv4_header.hpp"
 #include "pinger_v4.hpp"
 
+void print_hex(const uint8_t* buffer, size_t length);
 
 pinger_v4::pinger_v4(boost::asio::io_context& io_context, const char* destination)
     : pinger_base(io_context, destination, boost::asio::ip::icmp::icmp::v4())
@@ -28,7 +31,7 @@ icmp_header pinger_v4::handle_payload(std::string const &body)
   echo_request.code(0);
   echo_request.identifier(get_identifier());
   echo_request.sequence_number(++m_sequence_number);
-  compute_checksum_v4(echo_request, body.begin(), body.end());
+  compute_checksum(echo_request, body.begin(), body.end());
   return echo_request;
 }
 
@@ -66,4 +69,5 @@ bool pinger_v4::handle_receive(std::size_t length)
         << chrono::duration_cast<chrono::milliseconds>(elapsed).count()
         << std::endl;
     }
+    return true;
   }

@@ -33,7 +33,8 @@ public:
   enum { echo_reply = 0, destination_unreachable = 3, source_quench = 4,
     redirect = 5, echo_request = 8, time_exceeded = 11, parameter_problem = 12,
     timestamp_request = 13, timestamp_reply = 14, info_request = 15,
-    info_reply = 16, address_request = 17, address_reply = 18 };
+    info_reply = 16, address_request = 17, address_reply = 18,
+       echo_request_v6 = 128, echo_reply_v6 = 129};
 
   icmp_header() : rep_({}){  }
 
@@ -60,27 +61,7 @@ private:
 };
 
 template <typename Iterator>
-void compute_checksum_v4(icmp_header& header,
-    Iterator body_begin, Iterator body_end)
-{
-  unsigned int sum = (header.type() << 8) + header.code()
-    + header.identifier() + header.sequence_number();
-
-  Iterator body_iter = body_begin;
-  while (body_iter != body_end)
-  {
-    sum += (static_cast<unsigned char>(*body_iter++) << 8);
-    if (body_iter != body_end)
-      sum += static_cast<unsigned char>(*body_iter++);
-  }
-
-  sum = (sum >> 16) + (sum & 0xFFFF);
-  sum += (sum >> 16);
-  header.checksum(static_cast<unsigned short>(~sum));
-}
-
-template <typename Iterator>
-void compute_checksum_v6(icmp_header& header,
+void compute_checksum(icmp_header& header,
     Iterator body_begin, Iterator body_end)
 {
   unsigned int sum = (header.type() << 8) + header.code()
